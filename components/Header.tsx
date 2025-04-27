@@ -1,4 +1,4 @@
-import HeaderItem from "@/app/components/ui/HeaderItem";
+import HeaderItem from "@/components/ui/HeaderItem";
 
 const Header = () => {
   return (
