@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
+import { FormEvent, ReactNode } from "react";
 
 type Props = {
   children: ReactNode | ReactNode[];
-  onSubmit: () => void;
+  onSubmit: (e: FormEvent) => void;
 };
 
 const Form = ({ children, onSubmit }: Props) => {
