@@ -28,7 +28,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     return (
-      <div className="flex flex-col w-full gap-4">
+      <div className="flex flex-col items-start justify-start w-full gap-4">
         <label htmlFor={id}>{label}</label>
         <input
           className={
