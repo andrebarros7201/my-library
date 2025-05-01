@@ -4,12 +4,13 @@ import Input from "@/components/ui/Input";
 import { FormEvent, useRef } from "react";
 import Button from "@/components/ui/Button";
 import createNotification from "@/utils/createNotification";
+import axios, { AxiosError } from "axios";
 
 const SignupPage = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     const username = usernameRef.current?.value;
@@ -17,6 +18,22 @@ const SignupPage = () => {
 
     if (!username || !password) {
       createNotification({ type: "error", message: "All fields are required" });
+    }
+
+    try {
+      const response = await axios.post("/api/signup", {
+        username,
+        password,
+      });
+
+      const { notification } = response.data;
+
+      createNotification(notification);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { notification } = error.response!.data;
+        createNotification(notification);
+      }
     }
   }
   return (
@@ -28,6 +45,7 @@ const SignupPage = () => {
           type={"text"}
           required={true}
           minLength={3}
+          ref={usernameRef}
         />
         <Input
           label={"Password"}
@@ -35,6 +53,7 @@ const SignupPage = () => {
           type={"password"}
           required={true}
           minLength={3}
+          ref={passwordRef}
         />
         <Button label={"Create an account"} type={"submit"} />
       </Form>
