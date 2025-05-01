@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import Notification from "@/components/ui/Notification";
+import ReduxProvider from "@/components/ReduxProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,14 +30,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen h-screen box-border flex flex-col justify-start items-center gap-4`}
       >
-        <Header />
-        <div
-          className={
-            "flex flex-1 flex-col justify-start items-center gap-4 w-full max-w-6xl p-4"
-          }
-        >
-          {children}
-        </div>
+        <ReduxProvider>
+          <Header />
+          <Notification />
+          <div
+            className={
+              "flex flex-1 flex-col justify-start items-center gap-4 w-full max-w-6xl p-4"
+            }
+          >
+            {children}
+          </div>
+        </ReduxProvider>
       </body>
     </html>
   );
