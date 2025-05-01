@@ -11,11 +11,8 @@ interface NotificationState {
 }
 
 const initialState: NotificationState = {
-  isVisible: true,
-  notification: {
-    type: "error",
-    message: "teste",
-  },
+  isVisible: false,
+  notification: null,
 };
 
 const notificationSlice = createSlice({
