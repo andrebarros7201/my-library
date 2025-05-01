@@ -1,15 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type NotificationType = "success" | "error";
+export type NotificationType = "success" | "error";
 
 interface NotificationState {
-  type: NotificationType | null;
-  message: string | null;
+  isVisible: boolean;
+  notification: {
+    type: NotificationType;
+    message: string;
+  } | null;
 }
 
 const initialState: NotificationState = {
-  type: null,
-  message: null,
+  isVisible: true,
+  notification: {
+    type: "error",
+    message: "teste",
+  },
 };
 
 const notificationSlice = createSlice({
@@ -17,15 +23,15 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     clearNotification: (state) => {
-      state.type = null;
-      state.message = null;
+      state.isVisible = false;
+      state.notification = null;
     },
     setNotification: (
       state,
       action: PayloadAction<{ type: NotificationType; message: string }>,
     ) => {
-      state.type = action.payload.type;
-      state.message = action.payload.message;
+      state.isVisible = true;
+      state.notification = action.payload;
     },
   },
 });
