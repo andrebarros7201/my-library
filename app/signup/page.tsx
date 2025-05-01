@@ -18,6 +18,7 @@ const SignupPage = () => {
 
     if (!username || !password) {
       createNotification({ type: "error", message: "All fields are required" });
+      return;
     }
 
     try {
@@ -33,6 +34,8 @@ const SignupPage = () => {
       if (error instanceof AxiosError) {
         const { notification } = error.response!.data;
         createNotification(notification);
+      } else {
+        createNotification({ type: "error", message: "An error occurred" });
       }
     }
   }
