@@ -1,26 +1,19 @@
 "use client";
 import Form from "@/components/ui/Form";
 import Input from "@/components/ui/Input";
-import { FormEvent, useEffect, useRef } from "react";
+import { FormEvent, useRef } from "react";
 import Button from "@/components/ui/Button";
 import createNotification from "@/utils/createNotification";
 import { RootDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { clearError, signUpUser } from "@/redux/slices/userSlice";
+import { signUpUser } from "@/redux/slices/userSlice";
 
 const SignupPage = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch<RootDispatch>();
-  const { error, isLoading } = useSelector((state: RootState) => state.user);
-
-  useEffect(() => {
-    if (error) {
-      createNotification({ type: "error", message: error });
-      dispatch(clearError());
-    }
-  }, [error, dispatch]);
+  const { isLoading } = useSelector((state: RootState) => state.user);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -33,7 +26,15 @@ const SignupPage = () => {
       return;
     }
 
-    dispatch(signUpUser({ username, password }));
+    try {
+      await dispatch(signUpUser({ username, password })).unwrap();
+      createNotification({
+        type: "success",
+        message: "Account created successfully!",
+      });
+    } catch (error: unknown) {
+      createNotification({ type: "error", message: error as string });
+    }
   }
 
   return (
