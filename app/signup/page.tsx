@@ -1,14 +1,26 @@
 "use client";
 import Form from "@/components/ui/Form";
 import Input from "@/components/ui/Input";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import Button from "@/components/ui/Button";
 import createNotification from "@/utils/createNotification";
-import axios, { AxiosError } from "axios";
+import { RootDispatch, RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { clearError, signUpUser } from "@/redux/slices/userSlice";
 
 const SignupPage = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useDispatch<RootDispatch>();
+  const { error, isLoading } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (error) {
+      createNotification({ type: "error", message: error });
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -21,27 +33,12 @@ const SignupPage = () => {
       return;
     }
 
-    try {
-      const response = await axios.post("/api/signup", {
-        username,
-        password,
-      });
-
-      const { notification } = response.data;
-
-      createNotification(notification);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const { notification } = error.response!.data;
-        createNotification(notification);
-      } else {
-        createNotification({ type: "error", message: "An error occurred" });
-      }
-    }
+    dispatch(signUpUser({ username, password }));
   }
+
   return (
     <main className={"w-full flex flex-col justify-start items-center gap-4"}>
-      <Form onSubmit={(e: FormEvent) => handleSubmit(e)}>
+      <Form onSubmit={handleSubmit}>
         <Input
           label={"Username"}
           id={"username"}
@@ -49,6 +46,7 @@ const SignupPage = () => {
           required={true}
           minLength={3}
           ref={usernameRef}
+          disabled={isLoading}
         />
         <Input
           label={"Password"}
@@ -57,8 +55,13 @@ const SignupPage = () => {
           required={true}
           minLength={3}
           ref={passwordRef}
+          disabled={isLoading}
         />
-        <Button label={"Create an account"} type={"submit"} />
+        <Button
+          label={isLoading ? "Creating account..." : "Create an account"}
+          type={"submit"}
+          disabled={isLoading}
+        />
       </Form>
     </main>
   );
