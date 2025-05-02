@@ -10,6 +10,7 @@ type Props = {
   maxLength?: number;
   required?: boolean;
   placeholder?: string;
+  disabled?: boolean;
 };
 
 const Input = forwardRef<HTMLInputElement, Props>(
@@ -24,6 +25,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
       required,
       id,
       placeholder,
+      disabled = false,
     },
     ref,
   ) => {
@@ -41,6 +43,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
           type={type}
           placeholder={placeholder}
           required={required}
+          disabled={disabled}
           {...(type !== "number"
             ? {
                 minLength: minLength,

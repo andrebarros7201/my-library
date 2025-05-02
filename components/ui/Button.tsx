@@ -5,6 +5,7 @@ type Props = {
   variant?: "primary" | "secondary" | "warning" | "danger";
   type?: "submit" | "button";
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 const Button = ({
@@ -12,6 +13,7 @@ const Button = ({
   variant = "primary",
   onClick,
   type = "button",
+  disabled = false,
 }: Props) => {
   return (
     <button
@@ -24,6 +26,7 @@ const Button = ({
           "bg-red-500 hover:bg-red-700": variant === "danger",
         },
       )}
+      disabled={disabled}
       type={type}
       onClick={onClick}
     >
