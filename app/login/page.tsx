@@ -33,6 +33,9 @@ const LoginPage = () => {
         type: "success",
         message: "Logged in successfully!",
       });
+
+      usernameRef.current!.value = "";
+      passwordRef.current!.value = "";
     } catch (error: unknown) {
       createNotification({ type: "error", message: error as string });
     }
