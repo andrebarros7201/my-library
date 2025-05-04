@@ -59,6 +59,24 @@ export const logInUser = createAsyncThunk(
   },
 );
 
+export const fetchUserInfo = createAsyncThunk(
+  "/api/me",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/me");
+      const { user } = response.data;
+      return user;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { notification } = error.response!.data;
+        return rejectWithValue(notification.message);
+      } else {
+        return rejectWithValue("An error occurred. Please try again later.");
+      }
+    }
+  },
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -72,7 +90,7 @@ const userSlice = createSlice({
   extraReducers: (builder) =>
     builder
 
-      //SIGNUP
+      // SIGNUP
       .addCase(signUpUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -93,6 +111,21 @@ const userSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(logInUser.rejected, (state) => {
+        state.isAuthenticated = false;
+        state.isLoading = false;
+      })
+
+      // FETCH USER INFO
+      .addCase(fetchUserInfo.pending, (state) => {
+        state.isAuthenticated = false;
+        state.isLoading = true;
+      })
+      .addCase(fetchUserInfo.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+      })
+      .addCase(fetchUserInfo.rejected, (state) => {
         state.isAuthenticated = false;
         state.isLoading = false;
       }),
