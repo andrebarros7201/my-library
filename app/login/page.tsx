@@ -7,6 +7,7 @@ import { logInUser } from "@/redux/slices/userSlice";
 import Form from "@/components/ui/Form";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -15,6 +16,7 @@ const LoginPage = () => {
   const { isLoading } = useSelector((state: RootState) => state.user);
 
   const dispatch = useDispatch<RootDispatch>();
+  const router = useRouter();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -36,6 +38,8 @@ const LoginPage = () => {
 
       usernameRef.current!.value = "";
       passwordRef.current!.value = "";
+
+      router.push("/library");
     } catch (error: unknown) {
       createNotification({ type: "error", message: error as string });
     }
