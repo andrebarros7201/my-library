@@ -1,6 +1,7 @@
 import prisma from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { comparePassword } from "@/utils/password";
+import { signJWT } from "@/utils/jwt";
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,10 +32,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json(
+    const token = signJWT({ id: user.id, username: user.username });
+
+    const response = NextResponse.json(
       { user: { id: user.id, username: user.username } },
       { status: 200 },
     );
+
+    response.cookies.set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 2,
+    });
+
+    return response;
   } catch (error) {
     console.error(error);
     return NextResponse.json(
