@@ -1,12 +1,12 @@
 "use client";
 import HeaderItem from "@/components/ui/HeaderItem";
-import { useDispatch, useSelector } from "react-redux";
-import { RootDispatch, RootState } from "@/redux/store";
-import { logout } from "@/redux/slices/userSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import Logout from "@/components/Logout";
 
 const Header = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch<RootDispatch>();
+
   return (
     <header className={"w-full flex justify-center items-center"}>
       <div
@@ -20,12 +20,7 @@ const Header = () => {
         </div>
         <div className={"flex gap-4"}>
           {isAuthenticated ? (
-            <HeaderItem
-              label={"Logout"}
-              onClick={() => {
-                dispatch(logout());
-              }}
-            />
+            <Logout />
           ) : (
             <>
               <HeaderItem label={"Sign Up"} href={"/signup"} />
