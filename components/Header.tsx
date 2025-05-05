@@ -20,7 +20,10 @@ const Header = () => {
         </div>
         <div className={"flex gap-4"}>
           {isAuthenticated ? (
-            <Logout />
+            <>
+              <HeaderItem label={"Library"} href={"/library"} />
+              <Logout />
+            </>
           ) : (
             <>
               <HeaderItem label={"Sign Up"} href={"/signup"} />
