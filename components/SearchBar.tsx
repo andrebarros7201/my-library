@@ -1,18 +1,32 @@
 "use client";
-import { useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
+import { RootDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { fetchBooks } from "@/redux/slices/bookSlice";
+import Button from "@/components/ui/Button";
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState<string>("");
 
-  useEffect(() => {
-    if (searchText.length > 3) console.log(searchText);
-  }, [searchText]);
+  const dispatch = useDispatch<RootDispatch>();
 
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    if (searchText.length < 3) {
+      return;
+    }
+
+    dispatch(fetchBooks({ searchText: searchText }));
+  }
   return (
-    <div
+    <form
       className={
         "w-full max-w-sm border-2 border-gray-500 rounded-xl p-4 antialiased flex gap-4 items-center"
       }
+      onSubmit={(e) => {
+        handleSubmit(e);
+      }}
     >
       <input
         className={
@@ -22,8 +36,10 @@ const SearchBar = () => {
         type={"text"}
         onChange={(e) => setSearchText(e.target.value)}
         placeholder={"Search for a book. Ex: The Hobbit"}
+        minLength={3}
       />
-    </div>
+      <Button label={"Search"} type={"submit"} variant={"primary"} />
+    </form>
   );
 };
 
