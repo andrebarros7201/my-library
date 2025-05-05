@@ -4,11 +4,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 interface BookSliceState {
   currentBook: Book | null;
   bookList: Book[] | null;
+  loading: boolean;
 }
 
 const initialState: BookSliceState = {
   currentBook: null,
   bookList: [],
+  loading: false,
 };
 
 const bookSlice = createSlice({
