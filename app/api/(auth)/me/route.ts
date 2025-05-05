@@ -6,7 +6,10 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get("token")?.value;
 
     if (!token) {
-      return null;
+      return NextResponse.json(
+        { message: "Authentication required" },
+        { status: 401 },
+      );
     }
 
     const payload = verifyJWT(token);
