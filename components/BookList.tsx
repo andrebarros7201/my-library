@@ -13,7 +13,11 @@ const BookList = () => {
         "w-full z-20 rounded-xl p-4 border-2 border-gray-500 max-h-40 overflow-y-auto"
       }
     >
-      {bookList?.map((book) => <div key={book.key}>{book.title}</div>)}
+      {bookList?.map((book) => (
+        <div key={book.key}>
+          {book.title} by {book.author_name}
+        </div>
+      ))}
     </div>
   );
 };

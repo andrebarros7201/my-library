@@ -8,6 +8,8 @@ import BookList from "./BookList";
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState<string>("");
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const dispatch = useDispatch<RootDispatch>();
 
@@ -19,7 +21,9 @@ const SearchBar = () => {
     }
 
     dispatch(fetchBooks({ searchText: searchText }));
+    setHasSearched(true);
   }
+
   return (
     <div
       className={
@@ -33,6 +37,8 @@ const SearchBar = () => {
         onSubmit={(e) => {
           handleSubmit(e);
         }}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       >
         <input
           className={
@@ -43,10 +49,11 @@ const SearchBar = () => {
           onChange={(e) => setSearchText(e.target.value)}
           placeholder={"Search for a book. Ex: The Hobbit"}
           minLength={3}
+          value={searchText}
         />
         <Button label={"Search"} type={"submit"} variant={"primary"} />
       </form>
-      <BookList />
+      {hasSearched && isFocused && <BookList />}
     </div>
   );
 };
