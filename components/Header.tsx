@@ -16,12 +16,11 @@ const Header = () => {
       >
         <h3 className={"font-bold text-2xl"}>My Library</h3>
         <div className={"flex gap-4"}>
-          <HeaderItem label={"Home"} href={"/"} />
+          <HeaderItem label={"My Library"} href={"/library"} />
         </div>
         <div className={"flex gap-4"}>
           {isAuthenticated ? (
             <>
-              <HeaderItem label={"Library"} href={"/library"} />
               <Logout />
             </>
           ) : (
