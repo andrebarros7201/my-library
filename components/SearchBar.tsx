@@ -4,12 +4,9 @@ import { RootDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { fetchBooks } from "@/redux/slices/bookSlice";
 import Button from "@/components/ui/Button";
-import BookList from "./BookList";
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState<string>("");
-  const [hasSearched, setHasSearched] = useState<boolean>(false);
-  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const dispatch = useDispatch<RootDispatch>();
 
@@ -21,15 +18,10 @@ const SearchBar = () => {
     }
 
     dispatch(fetchBooks({ searchText: searchText }));
-    setHasSearched(true);
   }
 
   return (
-    <div
-      className={
-        "w-full max-w-sm flex flex-col gap-2 justify-start items-center"
-      }
-    >
+    <div className={"w-full flex flex-col gap-2 justify-start items-center"}>
       <form
         className={
           "w-full border-2 border-gray-500 rounded-xl p-4 antialiased flex gap-4 items-center"
@@ -37,8 +29,6 @@ const SearchBar = () => {
         onSubmit={(e) => {
           handleSubmit(e);
         }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
       >
         <input
           className={
@@ -53,7 +43,6 @@ const SearchBar = () => {
         />
         <Button label={"Search"} type={"submit"} variant={"primary"} />
       </form>
-      {hasSearched && isFocused && <BookList />}
     </div>
   );
 };
