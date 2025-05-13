@@ -1,5 +1,8 @@
 export interface Book {
   cover_i: number;
+  imageURL_S: string;
+  imageURL_M: string;
+  imageURL_L: string;
   has_fulltext: string;
   edition_count: number;
   title: string;

@@ -26,6 +26,9 @@ export const fetchBooks = createAsyncThunk(
       const transformedBooks: Book[] = docs.map((book: any) => {
         return {
           cover_i: book.cover_i,
+          imageURL_S: `https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg`,
+          imageURL_M: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
+          imageURL_L: `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`,
           has_fulltext: book.has_fulltext,
           edition_count: book.edition_count,
           title: book.title,
