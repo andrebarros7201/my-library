@@ -7,16 +7,11 @@ import BookList from "@/components/BookList";
 
 const AddBook = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const toggleIsModalOpen = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
   return (
     <>
-      <Button label={"Add Boot to List"} onClick={toggleIsModalOpen} />
+      <Button label={"Add Book to List"} onClick={() => setIsModalOpen(true)} />
       {isModalOpen && (
-        <Modal>
+        <Modal onClick={() => setIsModalOpen(false)}>
           <SearchBar />
           <BookList />
         </Modal>

@@ -1,6 +1,7 @@
 "use client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import BookListItem from "@/components/BookListItem";
 
 const BookList = () => {
   const { bookList } = useSelector((state: RootState) => state.book);
@@ -10,14 +11,10 @@ const BookList = () => {
   return (
     <div
       className={
-        "w-full z-20 rounded-xl p-4 border-2 border-gray-500 max-h-40 overflow-y-auto"
+        "w-full z-20 rounded-xl flex flex-col p-4 gap-2 border-2 border-gray-500 overflow-y-auto"
       }
     >
-      {bookList?.map((book) => (
-        <div key={book.key}>
-          {book.title} by {book.author_name}
-        </div>
-      ))}
+      {bookList?.map((book) => <BookListItem book={book} key={book.key} />)}
     </div>
   );
 };
