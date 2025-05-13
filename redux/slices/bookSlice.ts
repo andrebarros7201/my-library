@@ -1,5 +1,5 @@
 import { Book } from "@/types/books";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface BookSliceState {
@@ -55,7 +55,7 @@ const bookSlice = createSlice({
   name: "book",
   initialState,
   reducers: {
-    setCurrentBook: (state, action) => {
+    setCurrentBook: (state, action: PayloadAction<Book>) => {
       state.currentBook = action.payload;
     },
   },
