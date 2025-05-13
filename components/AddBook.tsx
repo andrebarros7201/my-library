@@ -13,7 +13,7 @@ const AddBook = () => {
       {isModalOpen && (
         <Modal onClick={() => setIsModalOpen(false)}>
           <SearchBar />
-          <BookList />
+          <BookList closeModal={() => setIsModalOpen(false)} />
         </Modal>
       )}
     </>

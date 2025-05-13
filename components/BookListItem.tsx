@@ -5,12 +5,14 @@ import { setCurrentBook } from "@/redux/slices/bookSlice";
 
 type Props = {
   book: Book;
+  closeModal: () => void;
 };
-const BookListItem = ({ book }: Props) => {
+const BookListItem = ({ book, closeModal }: Props) => {
   const dispatch = useDispatch<RootDispatch>();
 
   function handleClick() {
     dispatch(setCurrentBook(book));
+    closeModal();
   }
 
   return (
