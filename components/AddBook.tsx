@@ -9,7 +9,10 @@ const AddBook = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <>
-      <Button label={"Add Book to List"} onClick={() => setIsModalOpen(true)} />
+      <Button
+        label={"Add Book to Collection"}
+        onClick={() => setIsModalOpen(true)}
+      />
       {isModalOpen && (
         <Modal onClick={() => setIsModalOpen(false)}>
           <SearchBar />
