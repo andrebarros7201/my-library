@@ -4,6 +4,8 @@ import { RootDispatch } from "@/redux/store";
 import axios from "axios";
 import createNotification from "@/utils/createNotification";
 import { logout } from "@/redux/slices/userSlice";
+import { clearState } from "@/redux/slices/collectionSlice";
+import { clearNotification } from "@/redux/slices/notificationSlice";
 
 const Logout = () => {
   const dispatch = useDispatch<RootDispatch>();
@@ -14,6 +16,8 @@ const Logout = () => {
       const { notification } = response.data;
       createNotification(notification);
       dispatch(logout());
+      dispatch(clearState());
+      dispatch(clearNotification());
     } catch (error) {
       console.error(error);
       createNotification({
