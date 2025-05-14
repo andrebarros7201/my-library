@@ -14,7 +14,7 @@ const Modal = ({ children, onClick }: Props) => {
     >
       <div
         className={
-          "flex flex-col gap-4 bg-white w-full max-w-3xl h-full max-h-120 rounded p-4"
+          "flex flex-col items-center gap-4 bg-white w-full max-w-3xl h-full max-h-120 rounded p-4"
         }
         onClick={(e) => e.stopPropagation()}
       >
