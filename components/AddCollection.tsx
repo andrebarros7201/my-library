@@ -1,28 +1,44 @@
 "use client";
 import { FormEvent, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootDispatch, RootState } from "@/redux/store";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Form from "@/components/ui/Form";
 import Input from "@/components/ui/Input";
 import createNotification from "@/utils/createNotification";
+import { createCollection } from "@/redux/slices/collectionSlice";
 
 const AddCollection = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
 
+  const dispatch = useDispatch<RootDispatch>();
+
   const { user } = useSelector((state: RootState) => state.user);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const name = nameRef.current?.value;
+    const name = nameRef.current!.value;
     const description = descriptionRef.current?.value;
 
     if (!name) {
       createNotification({ type: "error", message: "name is required" });
       return;
+    }
+
+    try {
+      await dispatch(
+        createCollection({ name, description, userID: user!.id }),
+      ).unwrap();
+      createNotification({
+        type: "success",
+        message: "Collection created successfully!",
+      });
+      setIsModalOpen(false);
+    } catch (error: unknown) {
+      createNotification({ type: "error", message: error as string });
     }
   }
 
