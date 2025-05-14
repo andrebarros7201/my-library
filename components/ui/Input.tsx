@@ -22,7 +22,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
       minLength,
       minValue,
       maxValue,
-      required,
+      required = true,
       id,
       placeholder,
       disabled = false,
@@ -31,7 +31,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
   ) => {
     return (
       <div className="flex flex-col items-start justify-start w-full gap-4 md:text-2xl">
-        <label className={"capitalize w-full text-left"} htmlFor={id}>
+        <label className={"capitalize font-bold w-full text-left"} htmlFor={id}>
           {label}
         </label>
         <input
