@@ -43,6 +43,24 @@ export const createCollection = createAsyncThunk(
   },
 );
 
+export const fetchCollections = createAsyncThunk(
+  "collection/fetch",
+  async ({ userID }: { userID: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/user/${userID}/collection`);
+      const { collections } = response.data;
+      return collections;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { notification } = error.response!.data;
+        return rejectWithValue(notification.message);
+      } else {
+        return rejectWithValue("Something went wrong. Please try again later.");
+      }
+    }
+  },
+);
+
 const collectionSlice = createSlice({
   name: "collection",
   initialState,
@@ -55,6 +73,7 @@ const collectionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Create collection
       .addCase(createCollection.pending, (state) => {
         state.isLoading = true;
       })
@@ -67,6 +86,19 @@ const collectionSlice = createSlice({
       })
       .addCase(createCollection.rejected, (state) => {
         state.isLoading = false;
+      })
+      // Fetch collections
+      .addCase(fetchCollections.pending, (state) => {
+        state.isLoading = true;
+        state.collections = [];
+      })
+      .addCase(fetchCollections.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.collections = action.payload;
+      })
+      .addCase(fetchCollections.rejected, (state) => {
+        state.isLoading = false;
+        state.collections = [];
       });
   },
 });
