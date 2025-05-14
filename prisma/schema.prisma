@@ -14,7 +14,6 @@ model User {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   collections Collection[]
-  Review      Review[]
   UserBook    UserBook[]
 }
 
@@ -24,69 +23,43 @@ model Collection {
   description String?
   user        User     @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID      String
-  books       Book[] // Add relation to books
+  books       Book[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Book {
-  id            String       @id @default(cuid(2))
-  googleBookId  String       @unique // Google Books API ID
-  title         String
-  subtitle      String?
-  authors       String[] // Array of author names
-  publisher     String?
-  publishedDate String? // Using String as date format varies in Google API
-  description   String?      @db.Text
-  pageCount     Int?
-  categories    String[] // Array of category names
-  imageLinks    Json? // Store thumbnail and other image links
-  language      String?
-  previewLink   String?
-  infoLink      String?
-  averageRating Float?
-  ratingsCount  Int?
-  collections   Collection[] // Many-to-many relation with collections
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  Review        Review[]
-  UserBook      UserBook[]
+  id                 String       @id @default(cuid(2))
+  cover_i            Int
+  imageURL_S         String
+  imageURL_M         String
+  imageURL_L         String
+  has_fulltext       Boolean
+  edition_count      Int
+  title              String       @db.VarChar(255)
+  author_name        String[]
+  first_publish_year Int
+  key                String
+  ia                 String[]
+  author_key         String
+  public_scan_b      Boolean
+  collections        Collection[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  UserBook           UserBook[]
 }
 
 model UserBook {
-  id         String     @id @default(cuid(2))
-  book       Book       @relation(fields: [bookID], references: [id], onDelete: Cascade)
-  bookID     String
-  user       User       @relation(fields: [userID], references: [id], onDelete: Cascade)
-  userID     String
-  readStatus ReadStatus @default(WANT_TO_READ)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-
-  @@unique([userID, bookID])
-  @@index([userID, bookID])
-}
-
-model Review {
-  id         String     @id @default(cuid(2))
-  rating     Int        @db.SmallInt // Rating from 1-5
-  title      String?    @db.VarChar(255)
-  content    String     @db.Text
-  isPublic   Boolean    @default(true)
-  readStatus ReadStatus @default(COMPLETED)
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  book       Book       @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  bookId     String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-
-  @@unique([userId, bookId]) // Ensure one review per book per user
+  id     String     @id @default(cuid(2))
+  userID String
+  user   User       @relation(fields: [userID], references: [id], onDelete: Cascade)
+  bookID String
+  book   Book       @relation(fields: [bookID], references: [id], onDelete: Cascade)
+  status ReadStatus
 }
 
 enum ReadStatus {
-  WANT_TO_READ
+  NOT_READ
   CURRENTLY_READING
-  COMPLETED
-  DNF // Did Not Finish
+  FINISHED
 }
