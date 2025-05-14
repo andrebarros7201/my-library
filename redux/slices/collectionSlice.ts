@@ -95,6 +95,9 @@ const collectionSlice = createSlice({
       .addCase(fetchCollections.fulfilled, (state, action) => {
         state.isLoading = false;
         state.collections = action.payload;
+        if (state.collections.length > 0) {
+          state.currentCollection = state.collections[0];
+        }
       })
       .addCase(fetchCollections.rejected, (state) => {
         state.isLoading = false;
