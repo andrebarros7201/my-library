@@ -73,7 +73,7 @@ const collectionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Create collection
+      // Create a new collection
       .addCase(createCollection.pending, (state) => {
         state.isLoading = true;
       })
