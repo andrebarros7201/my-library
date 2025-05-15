@@ -1,6 +1,6 @@
 import { Book } from "@/types/books";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 interface BookSliceState {
   currentBook: Book | null;
@@ -54,6 +54,24 @@ export const fetchBooks = createAsyncThunk(
   },
 );
 
+export const createBook = createAsyncThunk(
+  "book/create",
+  async ({ book }: { book: Book }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/book", {
+        book,
+      });
+      return response.data.book;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response!.data.notification.message);
+      } else {
+        return rejectWithValue("An error occurred. Please try again later.");
+      }
+    }
+  },
+);
+
 const bookSlice = createSlice({
   name: "book",
   initialState,
@@ -77,6 +95,19 @@ const bookSlice = createSlice({
         state.bookList = [];
         state.currentBook = null;
         state.isLoading = false;
+      })
+
+      // CREATE BOOK
+      .addCase(createBook.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createBook.fulfilled, (state, action) => {
+        setCurrentBook(action.payload);
+        state.isLoading = false;
+      })
+      .addCase(createBook.rejected, (state) => {
+        state.isLoading = false;
+        state.currentBook = null;
       }),
 });
 
