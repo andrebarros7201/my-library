@@ -19,7 +19,11 @@ const CollectionDropdown = () => {
   return (
     <div className={"flex flex-col gap-4 group/dropdown"}>
       <h3 className={"font-bold text-3xl "}>{currentCollection?.name}</h3>
-      <div className={"hidden group-hover/dropdown:block"}>
+      <div
+        className={
+          "hidden group-hover/dropdown:block shadow-lg p-4 rounded-xl bg-gray-100"
+        }
+      >
         <div className={"flex flex-col gap-2 max-h-20 overflow-y-auto"}>
           {collections?.map((collection) => (
             <div
