@@ -41,7 +41,6 @@ export const fetchBooks = createAsyncThunk(
         };
       });
 
-      console.log(transformedBooks);
       return transformedBooks;
     } catch (error) {
       return rejectWithValue({
@@ -112,4 +111,3 @@ const bookSlice = createSlice({
 });
 
 export default bookSlice.reducer;
-export const { setCurrentBook } = bookSlice.actions;
