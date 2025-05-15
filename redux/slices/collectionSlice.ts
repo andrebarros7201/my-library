@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Collection } from "@/types/collection";
 import axios, { AxiosError } from "axios";
 
@@ -70,6 +70,9 @@ const collectionSlice = createSlice({
       state.collections = [];
       state.isLoading = false;
     },
+    setCollection: (state, action: PayloadAction<Collection>) => {
+      state.currentCollection = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -107,4 +110,4 @@ const collectionSlice = createSlice({
 });
 
 export default collectionSlice.reducer;
-export const { clearState } = collectionSlice.actions;
+export const { clearState, setCollection } = collectionSlice.actions;
