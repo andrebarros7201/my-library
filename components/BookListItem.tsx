@@ -1,7 +1,7 @@
 import { Book } from "@/types/books";
 import { RootDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { setCurrentBook } from "@/redux/slices/bookSlice";
+import { createBook } from "@/redux/slices/bookSlice";
 import Image from "next/image";
 
 type Props = {
@@ -12,7 +12,7 @@ const BookListItem = ({ book, closeModal }: Props) => {
   const dispatch = useDispatch<RootDispatch>();
 
   function handleClick() {
-    dispatch(setCurrentBook(book));
+    dispatch(createBook({ book }));
     closeModal();
   }
 
