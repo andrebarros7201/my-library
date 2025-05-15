@@ -62,11 +62,11 @@ export const createBook = createAsyncThunk(
       });
       return response.data.book;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        return rejectWithValue(error.response!.data.notification.message);
-      } else {
-        return rejectWithValue("An error occurred. Please try again later.");
-      }
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response!.data.notification.message
+          : "An error occurred. Please try again later.",
+      );
     }
   },
 );
@@ -74,11 +74,7 @@ export const createBook = createAsyncThunk(
 const bookSlice = createSlice({
   name: "book",
   initialState,
-  reducers: {
-    setCurrentBook: (state, action: PayloadAction<Book>) => {
-      state.currentBook = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) =>
     builder
       // FETCH BOOKS
@@ -87,12 +83,10 @@ const bookSlice = createSlice({
       })
       .addCase(fetchBooks.fulfilled, (state, action) => {
         state.bookList = action.payload;
-        state.currentBook = null;
         state.isLoading = false;
       })
       .addCase(fetchBooks.rejected, (state) => {
         state.bookList = [];
-        state.currentBook = null;
         state.isLoading = false;
       })
 
@@ -100,8 +94,8 @@ const bookSlice = createSlice({
       .addCase(createBook.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createBook.fulfilled, (state, action) => {
-        setCurrentBook(action.payload);
+      .addCase(createBook.fulfilled, (state, action: PayloadAction<Book>) => {
+        state.currentBook = action.payload;
         state.isLoading = false;
       })
       .addCase(createBook.rejected, (state) => {
