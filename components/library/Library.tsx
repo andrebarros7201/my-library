@@ -8,10 +8,10 @@ const Library = () => {
     <ProtectedRoute>
       <main className={"w-full flex flex-col justify-start items-start gap-4"}>
         <div className={"w-full flex justify-start items-start gap-4"}>
-          <CollectionDropdown />
           <AddCollection />
           <AddBook />
         </div>
+        <CollectionDropdown />
       </main>
     </ProtectedRoute>
   );
