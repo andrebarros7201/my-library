@@ -22,15 +22,19 @@ const CollectionDropdown = () => {
   }
 
   return (
-    <div className={"flex flex-col gap-4 w-80"}>
+    <div
+      className={
+        "flex flex-col gap-4 w-80 rounded shadow-xl p-4 bg-gray-100 cursor-pointer antialiased"
+      }
+    >
       <div
-        className={"flex gap-2 items-center w-full justify-start"}
+        className={"flex gap-2 items-center w-full justify-between"}
         onClick={() => {
           setIsDropdownOpen(!isDropdownOpen);
         }}
       >
-        <h3 className={"font-bold text-3xl cursor-pointer"}>
-          {currentCollection?.name}{" "}
+        <h3 className={"font-bold text-2xl cursor-pointer truncate"}>
+          {currentCollection?.name}
         </h3>
         <Image
           src={arrow}
@@ -43,7 +47,7 @@ const CollectionDropdown = () => {
       {isDropdownOpen && (
         <div
           className={
-            "flex flex-col gap-2 shadow-lg rounded-xl overflow-y-auto p-4 bg-gray-100 w-full max-h-120 antialiased"
+            "flex flex-col gap-2 overflow-y-auto w-full max-h-120 antialiased"
           }
         >
           {collections?.map((collection) => (
