@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import createNotification from "@/utils/createNotification";
 import { useDispatch, useSelector } from "react-redux";
 import { RootDispatch, RootState } from "@/redux/store";
@@ -10,10 +10,11 @@ import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const { isLoading, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  );
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
-  const { isLoading } = useSelector((state: RootState) => state.user);
 
   const dispatch = useDispatch<RootDispatch>();
   const router = useRouter();
@@ -44,6 +45,12 @@ const LoginPage = () => {
       createNotification({ type: "error", message: error as string });
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/library");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <main className={"w-full flex flex-col justify-start items-center gap-4"}>
