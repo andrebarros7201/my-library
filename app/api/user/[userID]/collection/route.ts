@@ -30,6 +30,9 @@ export async function GET(
 
     const collections = await prisma.collection.findMany({
       where: { userID },
+      include: {
+        books: true,
+      },
     });
 
     return NextResponse.json({ collections }, { status: 200 });
