@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Collection } from "@/types/collection";
 import axios, { AxiosError } from "axios";
+import { Book } from "@/types/books";
 
 interface CollectionState {
   currentCollection: Collection | null;
@@ -61,6 +62,37 @@ export const fetchCollections = createAsyncThunk(
   },
 );
 
+export const addBookToCollection = createAsyncThunk(
+  "collection/add_book",
+  async (
+    {
+      collectionID,
+      bookID,
+    }: {
+      collectionID: string;
+      bookID: string;
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await axios.post(
+        `/api/collection/${collectionID}/book`,
+        {
+          bookID,
+        },
+      );
+      const { notification, book, collection } = response.data;
+      return { notification, book, collection };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data?.notification?.message
+          : "Something went wrong. Please try again later.",
+      );
+    }
+  },
+);
+
 const collectionSlice = createSlice({
   name: "collection",
   initialState,
@@ -105,6 +137,28 @@ const collectionSlice = createSlice({
       .addCase(fetchCollections.rejected, (state) => {
         state.isLoading = false;
         state.collections = [];
+      })
+
+      // Add book to collection
+      .addCase(addBookToCollection.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        addBookToCollection.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            notification: { type: string; message: string };
+            book: Book;
+            collection: Collection;
+          }>,
+        ) => {
+          state.isLoading = false;
+          state.currentCollection = action.payload.collection;
+        },
+      )
+      .addCase(addBookToCollection.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });
