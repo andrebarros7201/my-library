@@ -1,6 +1,6 @@
 import { Book } from "@/types/books";
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 interface BookSliceState {
   bookList: Book[];
