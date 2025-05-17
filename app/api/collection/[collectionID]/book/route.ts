@@ -1,39 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 
+//TODO check if user has a collection with this book
+
+// ADD A NEW BOOK TO COLLECTION
 export async function POST(
   req: NextRequest,
   context: { params: Promise<{ collectionID: string }> },
 ) {
   try {
     const { collectionID } = await context.params;
-    const { bookID } = await req.json();
-
-    const book = await prisma.book.findUnique({ where: { id: bookID } });
+    const { book } = await req.json();
 
     if (!book) {
       return NextResponse.json(
-        { notification: { type: "error", message: "Book not found" } },
-        { status: 404 },
+        { notification: { type: "error", message: "Failed to add book" } },
+        { status: 400 },
       );
     }
 
-    const collection = await prisma.collection.findUnique({
-      where: { id: collectionID },
+    const newBook = await prisma.book.create({
+      data: {
+        cover_i: book.cover_i,
+        imageURL_S: `https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg`,
+        imageURL_M: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
+        imageURL_L: `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`,
+        edition_count: book.edition_count,
+        title: book.title,
+        author_name: book.author_name,
+        first_publish_year: book.first_publish_year,
+        status: "NOT_READ",
+      },
     });
-
-    if (!collection) {
-      return NextResponse.json(
-        { notification: { type: "error", message: "Collection not found" } },
-        { status: 404 },
-      );
-    }
 
     await prisma.collection.update({
       where: { id: collectionID },
       data: {
         books: {
-          connect: { id: bookID },
+          connect: { id: newBook.id },
         },
       },
     });
@@ -45,32 +49,12 @@ export async function POST(
       },
     });
 
-    const user = await prisma.user.findUnique({
-      where: { id: collection.userID },
-    });
-
-    if (!user) {
-      return NextResponse.json(
-        { notification: { type: "error", message: "User not found" } },
-        { status: 404 },
-      );
-    }
-
-    await prisma.userBook.create({
-      data: {
-        userID: user.id,
-        bookID: bookID,
-        status: "NOT_READ",
-      },
-    });
-
     return NextResponse.json(
       {
         notification: {
           type: "success",
           message: "Book added to collection.",
         },
-        book,
         collection: updatedCollection,
       },
       { status: 200 },

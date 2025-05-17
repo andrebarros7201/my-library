@@ -1,7 +1,6 @@
 import { Book } from "@/types/books";
 import { RootDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { createBook } from "@/redux/slices/bookSlice";
 import Image from "next/image";
 import { addBookToCollection } from "@/redux/slices/collectionSlice";
 
@@ -16,11 +15,10 @@ const BookListItem = ({ book, closeModal }: Props) => {
   );
 
   function handleClick() {
-    dispatch(createBook({ book }));
     dispatch(
       addBookToCollection({
         collectionID: currentCollection!.id,
-        bookID: book.key,
+        book,
       }),
     );
     closeModal();

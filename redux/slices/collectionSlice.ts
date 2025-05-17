@@ -67,10 +67,10 @@ export const addBookToCollection = createAsyncThunk(
   async (
     {
       collectionID,
-      bookID,
+      book,
     }: {
       collectionID: string;
-      bookID: string;
+      book: Book;
     },
     { rejectWithValue },
   ) => {
@@ -78,11 +78,11 @@ export const addBookToCollection = createAsyncThunk(
       const response = await axios.post(
         `/api/collection/${collectionID}/book`,
         {
-          bookID,
+          book,
         },
       );
-      const { notification, book, collection } = response.data;
-      return { notification, book, collection };
+      const { notification, collection } = response.data;
+      return { notification, collection };
     } catch (error) {
       return rejectWithValue(
         error instanceof AxiosError
@@ -149,12 +149,13 @@ const collectionSlice = createSlice({
           state,
           action: PayloadAction<{
             notification: { type: string; message: string };
-            book: Book;
             collection: Collection;
           }>,
         ) => {
+          const { collection } = action.payload;
+
           state.isLoading = false;
-          state.currentCollection = action.payload.collection;
+          state.currentCollection = collection;
         },
       )
       .addCase(addBookToCollection.rejected, (state) => {
