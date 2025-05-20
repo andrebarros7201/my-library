@@ -1,4 +1,5 @@
 export interface Book {
+  userID: string;
   cover_i: number;
   imageURL_S: string;
   imageURL_M: string;
