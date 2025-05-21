@@ -73,7 +73,7 @@ export async function POST(
     const newBook = await prisma.book.create({
       data: {
         userID: collection.userID,
-        cover_i: book.cover_i,
+        cover_i: book.cover_i ? book.cover_i : null,
         key: book.key,
         imageURL_S: `https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg`,
         imageURL_M: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
@@ -81,7 +81,9 @@ export async function POST(
         edition_count: book.edition_count,
         title: book.title,
         author_name: book.author_name,
-        first_publish_year: book.first_publish_year,
+        first_publish_year: book.first_publish_year
+          ? book.first_publish_year
+          : null,
         status: "NOT_READ",
       },
     });
