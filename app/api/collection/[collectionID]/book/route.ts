@@ -46,6 +46,23 @@ export async function POST(
 
     // If it does, connect that book with the current collection
     if (userHasBook) {
+      // Check if current collection already has this book
+      const collectionAlreadyHasBook = await prisma.collection.findFirst({
+        where: { id: collectionID, books: { some: { id: userHasBook.id } } },
+      });
+
+      if (collectionAlreadyHasBook) {
+        return NextResponse.json(
+          {
+            notification: {
+              type: "error",
+              message: "This collection already has this book",
+            },
+          },
+          { status: 400 },
+        );
+      }
+
       await prisma.collection.update({
         where: { id: collectionID },
         data: { books: { connect: { id: userHasBook.id } } },
@@ -127,3 +144,4 @@ export async function POST(
     );
   }
 }
+

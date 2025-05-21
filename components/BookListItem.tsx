@@ -3,6 +3,7 @@ import { RootDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import { addBookToCollection } from "@/redux/slices/collectionSlice";
+import createNotification from "@/utils/createNotification";
 
 type Props = {
   book: Book;
@@ -14,14 +15,21 @@ const BookListItem = ({ book, closeModal }: Props) => {
     (state: RootState) => state.collection,
   );
 
-  function handleClick() {
-    dispatch(
-      addBookToCollection({
-        collectionID: currentCollection!.id,
-        book,
-      }),
-    );
-    closeModal();
+  async function handleClick() {
+    try {
+      const response = await dispatch(
+        addBookToCollection({
+          collectionID: currentCollection!.id,
+          book,
+        }),
+      ).unwrap();
+      const { notification } = response;
+      createNotification(notification);
+    } catch (error) {
+      createNotification({ type: "error", message: error as string });
+    } finally {
+      closeModal();
+    }
   }
 
   return (
