@@ -31,14 +31,14 @@ model Collection {
 model Book {
   id                 String       @id @default(cuid(2))
   key                String
-  cover_i            Int
+  cover_i            Int?
   imageURL_S         String
   imageURL_M         String
   imageURL_L         String
   edition_count      Int
   title              String       @db.VarChar(255)
   author_name        String[]
-  first_publish_year Int
+  first_publish_year Int?
   status             ReadStatus   @default(NOT_READ)
   userID             String
   user               User         @relation(fields: [userID], references: [id], onDelete: Cascade)
