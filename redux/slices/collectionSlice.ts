@@ -23,7 +23,7 @@ export const createCollection = createAsyncThunk(
       description = "",
       userID,
     }: { name: string; description?: string; userID: string },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axios.post("/api/collection", {
@@ -41,7 +41,7 @@ export const createCollection = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  },
+  }
 );
 
 export const fetchCollections = createAsyncThunk(
@@ -59,7 +59,7 @@ export const fetchCollections = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  },
+  }
 );
 
 export const addBookToCollection = createAsyncThunk(
@@ -72,14 +72,14 @@ export const addBookToCollection = createAsyncThunk(
       collectionID: string;
       book: Book;
     },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `/api/collection/${collectionID}/book`,
         {
           book,
-        },
+        }
       );
       const { notification, collection } = response.data;
       return { notification, collection };
@@ -87,10 +87,38 @@ export const addBookToCollection = createAsyncThunk(
       return rejectWithValue(
         error instanceof AxiosError
           ? error.response?.data?.notification?.message
-          : "Something went wrong. Please try again later.",
+          : "Something went wrong. Please try again later."
       );
     }
-  },
+  }
+);
+
+export const updateBookStatus = createAsyncThunk(
+  "collection/update_book_status",
+  async (
+    {
+      bookID,
+      newStatus,
+    }: {
+      bookID: string;
+      newStatus: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.patch(`/api/book/${bookID}`, {
+        newStatus,
+      });
+      const { notification, book } = response.data;
+      return { notification, book };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data?.notification?.message
+          : "Something went wrong. Please try again later."
+      );
+    }
+  }
 );
 
 const collectionSlice = createSlice({
@@ -152,15 +180,34 @@ const collectionSlice = createSlice({
           action: PayloadAction<{
             notification: { type: string; message: string };
             collection: Collection;
-          }>,
+          }>
         ) => {
           const { collection } = action.payload;
 
           state.isLoading = false;
           state.currentCollection = collection;
-        },
+        }
       )
       .addCase(addBookToCollection.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Update book status
+      .addCase(updateBookStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateBookStatus.fulfilled, (state, action) => {
+        const { book } = action.payload;
+        const collection = state.currentCollection;
+        if (collection) {
+          const bookIndex = collection.books.findIndex((b) => b.id === book.id);
+          if (bookIndex !== -1) {
+            collection.books[bookIndex] = book;
+          }
+        }
+        state.isLoading = false;
+      })
+      .addCase(updateBookStatus.rejected, (state) => {
         state.isLoading = false;
       });
   },
@@ -168,4 +215,3 @@ const collectionSlice = createSlice({
 
 export default collectionSlice.reducer;
 export const { clearState, setCollection } = collectionSlice.actions;
-
