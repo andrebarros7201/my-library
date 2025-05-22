@@ -17,10 +17,17 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await hashPassword(password);
 
-    await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
+      },
+    });
+    await prisma.collection.create({
+      data: {
+        name: "My First Collection",
+        description: "My First Collection",
+        userID: newUser.id,
       },
     });
 
@@ -46,3 +53,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
