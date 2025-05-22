@@ -20,11 +20,12 @@ export const signUpUser = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      await axios.post("/api/signup", {
+      const response = await axios.post("/api/signup", {
         username,
         password,
       });
-      return true;
+      const { notification } = response.data;
+      return { notification };
     } catch (error) {
       if (error instanceof AxiosError) {
         const { notification } = error.response!.data;
@@ -133,4 +134,3 @@ const userSlice = createSlice({
 
 export default userSlice.reducer;
 export const { logout } = userSlice.actions;
-

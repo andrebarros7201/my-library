@@ -27,11 +27,11 @@ const SignupPage = () => {
     }
 
     try {
-      await dispatch(signUpUser({ username, password })).unwrap();
-      createNotification({
-        type: "success",
-        message: "Account created successfully!",
-      });
+      const response = await dispatch(
+        signUpUser({ username, password }),
+      ).unwrap();
+      const { notification } = response;
+      createNotification(notification);
     } catch (error: unknown) {
       createNotification({ type: "error", message: error as string });
     }
@@ -69,3 +69,4 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+
