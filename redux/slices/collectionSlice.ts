@@ -31,8 +31,8 @@ export const createCollection = createAsyncThunk(
         description,
         userID,
       });
-      const { collection } = response.data;
-      return collection;
+      const { collection, notification } = response.data;
+      return { collection, notification };
     } catch (error) {
       if (error instanceof AxiosError) {
         const { notification } = error.response!.data;
@@ -113,10 +113,12 @@ const collectionSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createCollection.fulfilled, (state, action) => {
+        const { collection } = action.payload;
+        collection.books = [];
         state.isLoading = false;
-        state.collections.push(action.payload);
+        state.collections.push(collection);
         if (state.currentCollection == null) {
-          state.currentCollection = action.payload;
+          state.currentCollection = collection;
         }
       })
       .addCase(createCollection.rejected, (state) => {
@@ -166,3 +168,4 @@ const collectionSlice = createSlice({
 
 export default collectionSlice.reducer;
 export const { clearState, setCollection } = collectionSlice.actions;
+
