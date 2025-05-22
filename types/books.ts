@@ -1,4 +1,5 @@
 export interface Book {
+  id: string;
   userID: string;
   cover_i?: number;
   imageURL_S: string;
@@ -17,3 +18,4 @@ export interface BookResponse {
   start: number;
   num_Found: number;
 }
+
