@@ -7,12 +7,14 @@ import createNotification from "@/utils/createNotification";
 import { RootDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "@/redux/slices/userSlice";
+import { useRouter } from "next/navigation";
 
 const SignupPage = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch<RootDispatch>();
+  const router = useRouter();
   const { isLoading } = useSelector((state: RootState) => state.user);
 
   async function handleSubmit(e: FormEvent) {
@@ -31,6 +33,7 @@ const SignupPage = () => {
         signUpUser({ username, password }),
       ).unwrap();
       const { notification } = response;
+      router.push("/login");
       createNotification(notification);
     } catch (error: unknown) {
       createNotification({ type: "error", message: error as string });
@@ -69,4 +72,3 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
-
