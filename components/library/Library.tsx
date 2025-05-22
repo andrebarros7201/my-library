@@ -2,6 +2,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AddBook from "@/components/AddBook";
 import AddCollection from "@/components/AddCollection";
 import CollectionDropdown from "@/components/CollectionDropdown";
+import CollectionBookList from "@/components/CollectionBookList";
 
 const Library = () => {
   return (
@@ -12,9 +13,11 @@ const Library = () => {
           <AddBook />
         </div>
         <CollectionDropdown />
+        <CollectionBookList />
       </main>
     </ProtectedRoute>
   );
 };
 
 export default Library;
+
