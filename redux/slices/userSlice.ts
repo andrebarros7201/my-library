@@ -46,8 +46,8 @@ export const logInUser = createAsyncThunk(
         username,
         password,
       });
-      const { user } = response.data;
-      return user;
+      const { user, notification } = response.data;
+      return { user, notification };
     } catch (error) {
       if (error instanceof AxiosError) {
         const { notification } = error.response!.data;
@@ -106,7 +106,7 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(logInUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isLoading = false;
         state.isAuthenticated = true;
       })
@@ -133,3 +133,4 @@ const userSlice = createSlice({
 
 export default userSlice.reducer;
 export const { logout } = userSlice.actions;
+
