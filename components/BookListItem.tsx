@@ -43,7 +43,7 @@ const BookListItem = ({ book, closeModal }: Props) => {
         />
         <div className={"grid grid-rows-2 gap-2"}>
           <h3 className={"font-bold text-lg"}>{book.title}</h3>
-          <p>by {book.author_name}</p>
+          <p>by {book.author_name.join(", ")}</p>
         </div>
       </div>
     </button>
