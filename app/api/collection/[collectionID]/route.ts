@@ -40,3 +40,47 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _: NextRequest,
+  context: { params: Promise<{ collectionID: string }> }
+) {
+  try {
+    const { collectionID } = await context.params;
+
+    if (!collectionID)
+      return NextResponse.json(
+        {
+          notification: {
+            type: "error",
+            message: "Collection ID not provided",
+          },
+        },
+        { status: 400 }
+      );
+
+    const collection = await prisma.collection.findUnique({
+      where: { id: collectionID },
+    });
+
+    if (!collection)
+      return NextResponse.json(
+        {
+          notification: { type: "error", message: "Collection not found" },
+        },
+        { status: 404 }
+      );
+
+    await prisma.collection.delete({ where: { id: collectionID } });
+    return NextResponse.json(
+      { notification: { type: "success", message: "Collection Deleted!" } },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { notification: { type: "error", message: "Something went wrong!" } },
+      { status: 500 }
+    );
+  }
+}

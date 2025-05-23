@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Collection } from "@/types/collection";
 import axios, { AxiosError } from "axios";
 import { Book } from "@/types/books";
+import { RootState } from "../store";
+import Notification from "@/types/notification";
 
 interface CollectionState {
   currentCollection: Collection | null;
@@ -166,6 +168,36 @@ export const updateCollection = createAsyncThunk(
   }
 );
 
+export const deleteCollection = createAsyncThunk<
+  { notification: Notification; collectionID: string },
+  { collectionID: string },
+  { state: RootState }
+>(
+  "collection/delete",
+  async (
+    { collectionID }: { collectionID: string },
+    { rejectWithValue, getState }
+  ) => {
+    try {
+      const state = getState();
+      const { collections } = state.collection;
+      if (collections.length <= 1)
+        throw new Error("There should be at least one collection available");
+      const response = await axios.delete(`/api/collection/${collectionID}`);
+      const { notification } = response.data;
+      return { notification, collectionID };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data.notification.message
+          : error instanceof Error
+            ? error.message
+            : "Something Went Wrong. Please try again later."
+      );
+    }
+  }
+);
+
 const collectionSlice = createSlice({
   name: "collection",
   initialState,
@@ -287,6 +319,25 @@ const collectionSlice = createSlice({
       })
       .addCase(updateCollection.rejected, (state) => {
         state.isLoading = false;
+      })
+
+      //Delete Collection
+      .addCase(deleteCollection.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCollection.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { collectionID } = action.payload;
+        const collectionIndex = state.collections.findIndex(
+          (c) => c.id === collectionID
+        );
+
+        if (collectionIndex === 0) {
+          state.currentCollection = state.collections[1];
+        }
+
+        state.currentCollection = state.collections[0];
+        state.collections.filter((c) => c.id !== collectionID);
       });
   },
 });

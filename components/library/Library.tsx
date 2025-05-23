@@ -4,6 +4,7 @@ import AddCollection from "@/components/AddCollection";
 import CollectionDropdown from "@/components/CollectionDropdown";
 import CollectionBookList from "@/components/CollectionBookList";
 import UpdateCollection from "../UpdateCollection";
+import DeleteCollection from "../DeleteCollection";
 
 const Library = () => {
   return (
@@ -17,6 +18,7 @@ const Library = () => {
           <CollectionDropdown />
           <div>
             <UpdateCollection />
+            <DeleteCollection />
           </div>
         </div>
         <CollectionBookList />
