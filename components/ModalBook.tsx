@@ -5,7 +5,7 @@ import Button from "./ui/Button";
 import { useDispatch } from "react-redux";
 import { RootDispatch } from "@/redux/store";
 import createNotification from "@/utils/createNotification";
-import { updateBookStatus } from "@/redux/slices/collectionSlice";
+import { deleteBook, updateBookStatus } from "@/redux/slices/collectionSlice";
 
 type Props = {
   onClick: () => void;
@@ -28,6 +28,19 @@ const ModalBook = ({ book, onClick }: Props) => {
         updateBookStatus({ bookID: book.id, newStatus: status })
       ).unwrap();
 
+      const { notification } = response;
+      createNotification(notification);
+    } catch (error) {
+      createNotification({
+        type: "error",
+        message: error as string,
+      });
+    }
+  }
+
+  async function handleDeleteBook() {
+    try {
+      const response = await dispatch(deleteBook(book.id)).unwrap();
       const { notification } = response;
       createNotification(notification);
     } catch (error) {
@@ -76,7 +89,11 @@ const ModalBook = ({ book, onClick }: Props) => {
                 onClick={() => handleUpdateBookStatus("FINISHED")}
               />
             )}
-            <Button label="Remove Book" variant="danger" />
+            <Button
+              label="Remove Book"
+              variant="danger"
+              onClick={() => handleDeleteBook()}
+            />
           </div>
         </div>
       </div>

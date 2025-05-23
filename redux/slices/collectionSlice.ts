@@ -121,6 +121,23 @@ export const updateBookStatus = createAsyncThunk(
   }
 );
 
+export const deleteBook = createAsyncThunk(
+  "collection/delete_book",
+  async (bookID: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/api/book/${bookID}`);
+      const { notification } = response.data;
+      return { notification, bookID };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data?.notification?.message
+          : "Something went wrong. Please try again later."
+      );
+    }
+  }
+);
+
 const collectionSlice = createSlice({
   name: "collection",
   initialState,
@@ -208,6 +225,22 @@ const collectionSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateBookStatus.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Delete book
+      .addCase(deleteBook.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteBook.fulfilled, (state, action) => {
+        const { bookID } = action.payload;
+        const collection = state.currentCollection;
+        if (collection) {
+          collection.books = collection.books.filter((b) => b.id !== bookID);
+        }
+        state.isLoading = false;
+      })
+      .addCase(deleteBook.rejected, (state) => {
         state.isLoading = false;
       });
   },

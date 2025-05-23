@@ -52,3 +52,48 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _: NextRequest,
+  context: { params: Promise<{ bookID: string }> }
+) {
+  try {
+    const { bookID } = await context.params;
+    const book = await prisma.book.findUnique({
+      where: { id: bookID },
+    });
+    if (!book) {
+      return new Response(
+        JSON.stringify({
+          notification: {
+            type: "error",
+            message: "Book not found",
+          },
+        }),
+        { status: 404 }
+      );
+    }
+
+    await prisma.book.delete({
+      where: { id: bookID },
+    });
+
+    return NextResponse.json(
+      {
+        notification: { type: "success", message: "Book deleted" },
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      {
+        notification: {
+          type: "error",
+          message: "Something went wrong. Please try again later.",
+        },
+      },
+      { status: 500 }
+    );
+  }
+}
