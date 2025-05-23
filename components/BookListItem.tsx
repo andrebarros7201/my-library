@@ -12,7 +12,7 @@ type Props = {
 const BookListItem = ({ book, closeModal }: Props) => {
   const dispatch = useDispatch<RootDispatch>();
   const { currentCollection } = useSelector(
-    (state: RootState) => state.collection,
+    (state: RootState) => state.collection
   );
 
   async function handleClick() {
@@ -21,7 +21,7 @@ const BookListItem = ({ book, closeModal }: Props) => {
         addBookToCollection({
           collectionID: currentCollection!.id,
           book,
-        }),
+        })
       ).unwrap();
       const { notification } = response;
       createNotification(notification);
@@ -43,7 +43,9 @@ const BookListItem = ({ book, closeModal }: Props) => {
         />
         <div className={"grid grid-rows-2 gap-2"}>
           <h3 className={"font-bold text-lg"}>{book.title}</h3>
-          <p>by {book.author_name.join(", ")}</p>
+          <p>
+            by {book.author_name ? book.author_name.join(", ") : "Not Provided"}
+          </p>
         </div>
       </div>
     </button>
