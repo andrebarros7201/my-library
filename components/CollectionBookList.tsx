@@ -1,19 +1,17 @@
 "use client";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
-import CollectionBookListStatus from "./CollectioBookListStatus";
-
-// TODO: Display list for each reading status
+import CollectionBookListStatus from "./CollectionBookListStatus";
 
 const CollectionBookList = () => {
   const { currentCollection } = useSelector(
-    (state: RootState) => state.collection,
+    (state: RootState) => state.collection
   );
   if (currentCollection) {
     const books = currentCollection.books;
     const notReadBooks = books.filter((x) => x.status === "NOT_READ");
     const currentlyReadingBooks = books.filter(
-      (x) => x.status === "CURRENTLY_READING",
+      (x) => x.status === "CURRENTLY_READING"
     );
     const finishedBooks = books.filter((x) => x.status === "FINISHED");
 

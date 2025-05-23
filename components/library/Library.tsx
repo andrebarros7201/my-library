@@ -3,6 +3,7 @@ import AddBook from "@/components/AddBook";
 import AddCollection from "@/components/AddCollection";
 import CollectionDropdown from "@/components/CollectionDropdown";
 import CollectionBookList from "@/components/CollectionBookList";
+import UpdateCollection from "../UpdateCollection";
 
 const Library = () => {
   return (
@@ -12,7 +13,12 @@ const Library = () => {
           <AddCollection />
           <AddBook />
         </div>
-        <CollectionDropdown />
+        <div className="flex gap-4">
+          <CollectionDropdown />
+          <div>
+            <UpdateCollection />
+          </div>
+        </div>
         <CollectionBookList />
       </main>
     </ProtectedRoute>
@@ -20,4 +26,3 @@ const Library = () => {
 };
 
 export default Library;
-
