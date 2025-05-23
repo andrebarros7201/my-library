@@ -336,8 +336,10 @@ const collectionSlice = createSlice({
           state.currentCollection = state.collections[1];
         }
 
+        state.collections = state.collections.filter(
+          (c) => c.id !== collectionID
+        );
         state.currentCollection = state.collections[0];
-        state.collections.filter((c) => c.id !== collectionID);
       });
   },
 });
