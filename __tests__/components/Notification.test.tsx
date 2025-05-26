@@ -1,11 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import Notification from "@/components/ui/Notification";
 import notificationSlice from "@/redux/slices/notificationSlice";
 import { ReactElement } from "react";
 import userEvent from "@testing-library/user-event";
-import { exitCode } from "process";
 
 describe("Notification component", () => {
   function renderWithRedux(
