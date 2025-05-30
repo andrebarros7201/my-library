@@ -31,7 +31,12 @@ const CollectionSettings = () => {
     >
       <Image src={settingSVG} height={32} width={32} alt="image of a gear" />
       {isOpen && (
-        <div className="absolute flex flex-col gap-4 p-4 bg-gray-100 rounded shadow-xl">
+        <div
+          className="absolute flex flex-col gap-4 p-4 bg-gray-100 rounded shadow-xl"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <UpdateCollection />
           <DeleteCollection />
         </div>
