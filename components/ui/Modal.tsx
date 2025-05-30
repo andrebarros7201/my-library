@@ -8,7 +8,7 @@ const Modal = ({ children, onClick }: Props) => {
   return (
     <div
       className={
-        "w-screen h-screen fixed p-4 top-0 left-0 bg-black/70 flex gap-4 justify-center items-center"
+        "w-screen h-screen z-10 fixed p-4 top-0 left-0 bg-black/70 flex gap-4 justify-center items-center"
       }
       onClick={onClick}
     >
