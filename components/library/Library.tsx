@@ -3,8 +3,7 @@ import AddBook from "@/components/AddBook";
 import AddCollection from "@/components/AddCollection";
 import CollectionDropdown from "@/components/CollectionDropdown";
 import CollectionBookList from "@/components/CollectionBookList";
-import UpdateCollection from "../UpdateCollection";
-import DeleteCollection from "../DeleteCollection";
+import CollectionSettings from "../CollectionSettings";
 
 const Library = () => {
   return (
@@ -14,12 +13,9 @@ const Library = () => {
           <AddCollection />
           <AddBook />
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <CollectionDropdown />
-          <div>
-            <UpdateCollection />
-            <DeleteCollection />
-          </div>
+          <CollectionSettings />
         </div>
         <CollectionBookList />
       </main>
