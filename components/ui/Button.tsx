@@ -18,7 +18,7 @@ const Button = ({
   return (
     <button
       className={clsx(
-        "px-4 py-2 text-white rounded shadow-md transition-all duration-300 ease-in-out cursor-pointer",
+        "px-4 py-2 text-sm sm:text-md text-white rounded shadow-md transition-all duration-300 ease-in-out cursor-pointer",
         {
           "bg-blue-500 hover:bg-blue-700": variant === "primary",
           "bg-gray-500 hover:bg-gray-700": variant === "secondary",
@@ -36,3 +36,4 @@ const Button = ({
 };
 
 export default Button;
+
