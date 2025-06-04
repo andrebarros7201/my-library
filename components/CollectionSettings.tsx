@@ -25,14 +25,14 @@ const CollectionSettings = () => {
 
   return (
     <div
-      className="relative inline-block gap-4 cursor-pointer"
+      className="relative inline-block gap-4 cursor-pointer shrink-0"
       ref={divRef}
       onClick={() => setIsOpen((isOpen) => !isOpen)}
     >
       <Image src={settingSVG} height={32} width={32} alt="image of a gear" />
       {isOpen && (
         <div
-          className="absolute flex flex-col gap-4 p-4 bg-gray-100 rounded shadow-xl"
+          className="absolute right-0 sm:right-auto flex flex-col gap-4 p-4 bg-gray-100 rounded shadow-xl"
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -46,3 +46,4 @@ const CollectionSettings = () => {
 };
 
 export default CollectionSettings;
+
