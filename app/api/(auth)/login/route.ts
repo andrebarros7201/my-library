@@ -35,7 +35,10 @@ export async function POST(req: NextRequest) {
     const token = signJWT({ id: user.id, username: user.username });
 
     const response = NextResponse.json(
-      { user: { id: user.id, username: user.username } },
+      {
+        user: { id: user.id, username: user.username },
+        notification: { type: "success", message: "Logged In Successfully" },
+      },
       { status: 200 },
     );
 
@@ -62,3 +65,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

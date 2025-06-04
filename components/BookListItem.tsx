@@ -1,9 +1,9 @@
 import { Book } from "@/types/books";
 import { RootDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { createBook } from "@/redux/slices/bookSlice";
 import Image from "next/image";
 import { addBookToCollection } from "@/redux/slices/collectionSlice";
+import createNotification from "@/utils/createNotification";
 
 type Props = {
   book: Book;
@@ -12,18 +12,24 @@ type Props = {
 const BookListItem = ({ book, closeModal }: Props) => {
   const dispatch = useDispatch<RootDispatch>();
   const { currentCollection } = useSelector(
-    (state: RootState) => state.collection,
+    (state: RootState) => state.collection
   );
 
-  function handleClick() {
-    dispatch(createBook({ book }));
-    dispatch(
-      addBookToCollection({
-        collectionID: currentCollection!.id,
-        bookID: book.key,
-      }),
-    );
-    closeModal();
+  async function handleClick() {
+    try {
+      const response = await dispatch(
+        addBookToCollection({
+          collectionID: currentCollection!.id,
+          book,
+        })
+      ).unwrap();
+      const { notification } = response;
+      createNotification(notification);
+    } catch (error) {
+      createNotification({ type: "error", message: error as string });
+    } finally {
+      closeModal();
+    }
   }
 
   return (
@@ -37,7 +43,9 @@ const BookListItem = ({ book, closeModal }: Props) => {
         />
         <div className={"grid grid-rows-2 gap-2"}>
           <h3 className={"font-bold text-lg"}>{book.title}</h3>
-          <p>by {book.author_name}</p>
+          <p>
+            by {book.author_name ? book.author_name.join(", ") : "Not Provided"}
+          </p>
         </div>
       </div>
     </button>

@@ -7,7 +7,7 @@ import { clearNotification } from "@/redux/slices/notificationSlice";
 const Notification = () => {
   const dispatch = useDispatch<RootDispatch>();
   const { isVisible, notification } = useSelector(
-    (state: RootState) => state.notification,
+    (state: RootState) => state.notification
   );
   if (!isVisible) return null;
 
@@ -15,14 +15,15 @@ const Notification = () => {
 
   return (
     isVisible && (
-      <div className={"absolute top-4 p-4 w-full max-w-sm"}>
+      <div role="alert" className={"absolute top-4 p-4 w-full max-w-sm"}>
         <div
+          data-testid="notification"
           className={clsx(
             "w-full flex flex-col gap-2 justify-start rounded text-white p-4",
             {
               "bg-red-500": type === "error",
               "bg-green-500": type === "success",
-            },
+            }
           )}
         >
           <div className={"flex justify-between items-center"}>

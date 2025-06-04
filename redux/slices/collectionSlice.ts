@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Collection } from "@/types/collection";
 import axios, { AxiosError } from "axios";
 import { Book } from "@/types/books";
+import { RootState } from "../store";
+import Notification from "@/types/notification";
 
 interface CollectionState {
   currentCollection: Collection | null;
@@ -23,7 +25,7 @@ export const createCollection = createAsyncThunk(
       description = "",
       userID,
     }: { name: string; description?: string; userID: string },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axios.post("/api/collection", {
@@ -31,8 +33,8 @@ export const createCollection = createAsyncThunk(
         description,
         userID,
       });
-      const { collection } = response.data;
-      return collection;
+      const { collection, notification } = response.data;
+      return { collection, notification };
     } catch (error) {
       if (error instanceof AxiosError) {
         const { notification } = error.response!.data;
@@ -41,7 +43,7 @@ export const createCollection = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  },
+  }
 );
 
 export const fetchCollections = createAsyncThunk(
@@ -59,7 +61,7 @@ export const fetchCollections = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  },
+  }
 );
 
 export const addBookToCollection = createAsyncThunk(
@@ -67,30 +69,133 @@ export const addBookToCollection = createAsyncThunk(
   async (
     {
       collectionID,
-      bookID,
+      book,
     }: {
       collectionID: string;
-      bookID: string;
+      book: Book;
     },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `/api/collection/${collectionID}/book`,
         {
-          bookID,
-        },
+          book,
+        }
       );
-      const { notification, book, collection } = response.data;
-      return { notification, book, collection };
+      const { notification, collection } = response.data;
+      return { notification, collection };
     } catch (error) {
       return rejectWithValue(
         error instanceof AxiosError
           ? error.response?.data?.notification?.message
-          : "Something went wrong. Please try again later.",
+          : "Something went wrong. Please try again later."
       );
     }
-  },
+  }
+);
+
+export const updateBookStatus = createAsyncThunk(
+  "collection/update_book_status",
+  async (
+    {
+      bookID,
+      newStatus,
+    }: {
+      bookID: string;
+      newStatus: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.patch(`/api/book/${bookID}`, {
+        newStatus,
+      });
+      const { notification, book } = response.data;
+      return { notification, book };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data?.notification?.message
+          : "Something went wrong. Please try again later."
+      );
+    }
+  }
+);
+
+export const deleteBook = createAsyncThunk(
+  "collection/delete_book",
+  async (bookID: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/api/book/${bookID}`);
+      const { notification } = response.data;
+      return { notification, bookID };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data?.notification?.message
+          : "Something went wrong. Please try again later."
+      );
+    }
+  }
+);
+
+export const updateCollection = createAsyncThunk(
+  "collection/update_collection",
+  async (
+    {
+      newName,
+      newDescription,
+      collectionID,
+    }: { newName: string; newDescription?: string; collectionID: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.patch(`/api/collection/${collectionID}`, {
+        name: newName,
+        description: newDescription,
+      });
+
+      const { notification, updatedCollection } = response.data;
+      return { notification, updatedCollection };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data?.notification.message
+          : "Something Went Wrong. Please try again later."
+      );
+    }
+  }
+);
+
+export const deleteCollection = createAsyncThunk<
+  { notification: Notification; collectionID: string },
+  { collectionID: string },
+  { state: RootState }
+>(
+  "collection/delete",
+  async (
+    { collectionID }: { collectionID: string },
+    { rejectWithValue, getState }
+  ) => {
+    try {
+      const state = getState();
+      const { collections } = state.collection;
+      if (collections.length <= 1)
+        throw new Error("There should be at least one collection available");
+      const response = await axios.delete(`/api/collection/${collectionID}`);
+      const { notification } = response.data;
+      return { notification, collectionID };
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof AxiosError
+          ? error.response?.data.notification.message
+          : error instanceof Error
+            ? error.message
+            : "Something Went Wrong. Please try again later."
+      );
+    }
+  }
 );
 
 const collectionSlice = createSlice({
@@ -113,10 +218,12 @@ const collectionSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createCollection.fulfilled, (state, action) => {
+        const { collection } = action.payload;
+        collection.books = [];
         state.isLoading = false;
-        state.collections.push(action.payload);
+        state.collections.push(collection);
         if (state.currentCollection == null) {
-          state.currentCollection = action.payload;
+          state.currentCollection = collection;
         }
       })
       .addCase(createCollection.rejected, (state) => {
@@ -149,16 +256,90 @@ const collectionSlice = createSlice({
           state,
           action: PayloadAction<{
             notification: { type: string; message: string };
-            book: Book;
             collection: Collection;
-          }>,
+          }>
         ) => {
+          const { collection } = action.payload;
+
           state.isLoading = false;
-          state.currentCollection = action.payload.collection;
-        },
+          state.currentCollection = collection;
+        }
       )
       .addCase(addBookToCollection.rejected, (state) => {
         state.isLoading = false;
+      })
+
+      // Update book status
+      .addCase(updateBookStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateBookStatus.fulfilled, (state, action) => {
+        const { book } = action.payload;
+        const collection = state.currentCollection;
+        if (collection) {
+          const bookIndex = collection.books.findIndex((b) => b.id === book.id);
+          if (bookIndex !== -1) {
+            collection.books[bookIndex] = book;
+          }
+        }
+        state.isLoading = false;
+      })
+      .addCase(updateBookStatus.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      // Delete book
+      .addCase(deleteBook.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteBook.fulfilled, (state, action) => {
+        const { bookID } = action.payload;
+        const collection = state.currentCollection;
+        if (collection) {
+          collection.books = collection.books.filter((b) => b.id !== bookID);
+        }
+        state.isLoading = false;
+      })
+      .addCase(deleteBook.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      //Update Collection
+      .addCase(updateCollection.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCollection.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { updatedCollection } = action.payload;
+        state.currentCollection = updatedCollection;
+        const collectionIndex = state.collections.findIndex(
+          (c) => c.id === updatedCollection.id
+        );
+        state.collections[collectionIndex] = updatedCollection;
+      })
+      .addCase(updateCollection.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      //Delete Collection
+      .addCase(deleteCollection.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCollection.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { collectionID } = action.payload;
+        const collectionIndex = state.collections.findIndex(
+          (c) => c.id === collectionID
+        );
+
+        if (collectionIndex === 0) {
+          state.currentCollection = state.collections[1];
+        }
+
+        state.collections = state.collections.filter(
+          (c) => c.id !== collectionID
+        );
+        state.currentCollection = state.collections[0];
       });
   },
 });

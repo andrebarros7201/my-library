@@ -29,13 +29,11 @@ const AddCollection = () => {
     }
 
     try {
-      await dispatch(
+      const response = await dispatch(
         createCollection({ name, description, userID: user!.id }),
       ).unwrap();
-      createNotification({
-        type: "success",
-        message: "Collection created successfully!",
-      });
+      const { notification } = response;
+      createNotification(notification);
       setIsModalOpen(false);
     } catch (error: unknown) {
       createNotification({ type: "error", message: error as string });
@@ -68,3 +66,4 @@ const AddCollection = () => {
 };
 
 export default AddCollection;
+

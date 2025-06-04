@@ -31,11 +31,11 @@ const LoginPage = () => {
     }
 
     try {
-      await dispatch(logInUser({ username, password })).unwrap();
-      createNotification({
-        type: "success",
-        message: "Logged in successfully!",
-      });
+      const response = await dispatch(
+        logInUser({ username, password }),
+      ).unwrap();
+      const { notification } = response;
+      createNotification(notification);
 
       usernameRef.current!.value = "";
       passwordRef.current!.value = "";
@@ -84,3 +84,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
