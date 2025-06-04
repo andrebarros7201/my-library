@@ -25,7 +25,7 @@ export const createCollection = createAsyncThunk(
       description = "",
       userID,
     }: { name: string; description?: string; userID: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axios.post("/api/collection", {
@@ -43,7 +43,7 @@ export const createCollection = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  }
+  },
 );
 
 export const fetchCollections = createAsyncThunk(
@@ -61,7 +61,7 @@ export const fetchCollections = createAsyncThunk(
         return rejectWithValue("Something went wrong. Please try again later.");
       }
     }
-  }
+  },
 );
 
 export const addBookToCollection = createAsyncThunk(
@@ -74,14 +74,14 @@ export const addBookToCollection = createAsyncThunk(
       collectionID: string;
       book: Book;
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axios.post(
         `/api/collection/${collectionID}/book`,
         {
           book,
-        }
+        },
       );
       const { notification, collection } = response.data;
       return { notification, collection };
@@ -89,10 +89,10 @@ export const addBookToCollection = createAsyncThunk(
       return rejectWithValue(
         error instanceof AxiosError
           ? error.response?.data?.notification?.message
-          : "Something went wrong. Please try again later."
+          : "Something went wrong. Please try again later.",
       );
     }
-  }
+  },
 );
 
 export const updateBookStatus = createAsyncThunk(
@@ -105,7 +105,7 @@ export const updateBookStatus = createAsyncThunk(
       bookID: string;
       newStatus: string;
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axios.patch(`/api/book/${bookID}`, {
@@ -117,10 +117,10 @@ export const updateBookStatus = createAsyncThunk(
       return rejectWithValue(
         error instanceof AxiosError
           ? error.response?.data?.notification?.message
-          : "Something went wrong. Please try again later."
+          : "Something went wrong. Please try again later.",
       );
     }
-  }
+  },
 );
 
 export const deleteBook = createAsyncThunk(
@@ -134,10 +134,10 @@ export const deleteBook = createAsyncThunk(
       return rejectWithValue(
         error instanceof AxiosError
           ? error.response?.data?.notification?.message
-          : "Something went wrong. Please try again later."
+          : "Something went wrong. Please try again later.",
       );
     }
-  }
+  },
 );
 
 export const updateCollection = createAsyncThunk(
@@ -148,7 +148,7 @@ export const updateCollection = createAsyncThunk(
       newDescription,
       collectionID,
     }: { newName: string; newDescription?: string; collectionID: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axios.patch(`/api/collection/${collectionID}`, {
@@ -162,10 +162,10 @@ export const updateCollection = createAsyncThunk(
       return rejectWithValue(
         error instanceof AxiosError
           ? error.response?.data?.notification.message
-          : "Something Went Wrong. Please try again later."
+          : "Something Went Wrong. Please try again later.",
       );
     }
-  }
+  },
 );
 
 export const deleteCollection = createAsyncThunk<
@@ -176,7 +176,7 @@ export const deleteCollection = createAsyncThunk<
   "collection/delete",
   async (
     { collectionID }: { collectionID: string },
-    { rejectWithValue, getState }
+    { rejectWithValue, getState },
   ) => {
     try {
       const state = getState();
@@ -192,10 +192,10 @@ export const deleteCollection = createAsyncThunk<
           ? error.response?.data.notification.message
           : error instanceof Error
             ? error.message
-            : "Something Went Wrong. Please try again later."
+            : "Something Went Wrong. Please try again later.",
       );
     }
-  }
+  },
 );
 
 const collectionSlice = createSlice({
@@ -257,13 +257,21 @@ const collectionSlice = createSlice({
           action: PayloadAction<{
             notification: { type: string; message: string };
             collection: Collection;
-          }>
+          }>,
         ) => {
           const { collection } = action.payload;
 
           state.isLoading = false;
           state.currentCollection = collection;
-        }
+          const collectionIndex = state.collections.findIndex(
+            (c) => c.id === collection.id,
+          );
+
+          // Update collection from collections list
+          if (collectionIndex !== -1) {
+            state.collections[collectionIndex] = collection;
+          }
+        },
       )
       .addCase(addBookToCollection.rejected, (state) => {
         state.isLoading = false;
@@ -278,8 +286,12 @@ const collectionSlice = createSlice({
         const collection = state.currentCollection;
         if (collection) {
           const bookIndex = collection.books.findIndex((b) => b.id === book.id);
+          const collectionIndex = state.collections.findIndex(
+            (c) => c.id === collection.id,
+          );
           if (bookIndex !== -1) {
             collection.books[bookIndex] = book;
+            state.collections[collectionIndex].books[bookIndex] = book;
           }
         }
         state.isLoading = false;
@@ -313,7 +325,7 @@ const collectionSlice = createSlice({
         const { updatedCollection } = action.payload;
         state.currentCollection = updatedCollection;
         const collectionIndex = state.collections.findIndex(
-          (c) => c.id === updatedCollection.id
+          (c) => c.id === updatedCollection.id,
         );
         state.collections[collectionIndex] = updatedCollection;
       })
@@ -329,7 +341,7 @@ const collectionSlice = createSlice({
         state.isLoading = false;
         const { collectionID } = action.payload;
         const collectionIndex = state.collections.findIndex(
-          (c) => c.id === collectionID
+          (c) => c.id === collectionID,
         );
 
         if (collectionIndex === 0) {
@@ -337,7 +349,7 @@ const collectionSlice = createSlice({
         }
 
         state.collections = state.collections.filter(
-          (c) => c.id !== collectionID
+          (c) => c.id !== collectionID,
         );
         state.currentCollection = state.collections[0];
       });

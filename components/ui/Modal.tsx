@@ -14,7 +14,7 @@ const Modal = ({ children, onClick }: Props) => {
     >
       <div
         className={
-          "flex flex-col items-center gap-4 bg-white w-full max-w-3xl h-auto sm:h-full sm:max-h-120 rounded p-4 overflow-y-auto box-border"
+          "flex flex-col items-center gap-4 bg-white w-full max-w-3xl h-auto max-h-120 rounded p-4 overflow-y-auto box-border"
         }
         onClick={(e) => e.stopPropagation()}
       >
@@ -25,3 +25,4 @@ const Modal = ({ children, onClick }: Props) => {
 };
 
 export default Modal;
+

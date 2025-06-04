@@ -25,7 +25,7 @@ const ModalBook = ({ book, onClick }: Props) => {
   async function handleUpdateBookStatus(status: string) {
     try {
       const response = await dispatch(
-        updateBookStatus({ bookID: book.id, newStatus: status })
+        updateBookStatus({ bookID: book.id, newStatus: status }),
       ).unwrap();
 
       const { notification } = response;
@@ -56,9 +56,9 @@ const ModalBook = ({ book, onClick }: Props) => {
         <Image
           src={book.imageURL_L}
           width={100}
-          height={600}
+          height={400}
           alt={`cover image of ${book.title}`}
-          className="w-1/2 h-full object-cover"
+          className="w-1/2 object-cover max-h-60 sm:max-h-100"
           style={{
             objectFit: "contain",
           }}
