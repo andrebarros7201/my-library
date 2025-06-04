@@ -62,7 +62,6 @@ const CollectionDropdown = () => {
         />
       </div>
 
-      {/* Dropdown List - Absolutely Positioned */}
       {isDropdownOpen && (
         <div className="absolute top-full left-0 w-full z-10 mt-1">
           <div className="flex flex-col gap-2 overflow-y-auto max-h-60 shadow-lg rounded-md bg-gray-200 p-2 antialiased">
