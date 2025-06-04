@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 My Library
 
-## Getting Started
+**My Library** is a full-stack web application that allows users to create, update, and delete personalized book collections. Within each collection, users can search for and add books using real-time data from the Open Library API.
 
-First, run the development server:
+The interface is clean and user-friendly, focusing on functionality and ease of use, allowing users to organize their reading interests with minimal effort.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Create unlimited book collections
+- Add, edit, or remove books within each collection
+- Seamless search and integration with the [Open Library API](https://openlibrary.org/developers/api)
+- Authentication system with JWT for secure access
+- Fully responsive and accessible design
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
+- [React](https://reactjs.org/)
+- [Next.js](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [TailwindCSS](https://tailwindcss.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Backend
+- Next.js API Routes
+- [PostgreSQL](https://www.postgresql.org/) (via Docker)
+- [Prisma ORM](https://www.prisma.io/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Authentication
+- JSON Web Tokens (JWT)
 
-## Deploy on Vercel
+### External API
+- [Open Library API](https://openlibrary.org/developers/api)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### DevOps
+- [Docker](https://www.docker.com/) for containerizing the Node.js app and PostgreSQL database
