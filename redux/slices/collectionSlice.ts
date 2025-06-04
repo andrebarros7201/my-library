@@ -286,8 +286,12 @@ const collectionSlice = createSlice({
         const collection = state.currentCollection;
         if (collection) {
           const bookIndex = collection.books.findIndex((b) => b.id === book.id);
+          const collectionIndex = state.collections.findIndex(
+            (c) => c.id === collection.id,
+          );
           if (bookIndex !== -1) {
             collection.books[bookIndex] = book;
+            state.collections[collectionIndex].books[bookIndex] = book;
           }
         }
         state.isLoading = false;
