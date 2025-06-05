@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Book } from "@/types/books";
 import Image from "next/image";
-import ModalBook from "@/components/ModalBook";
+import ModalBook from "@/components/library/book/ModalBook";
 
 type Props = {
   book: Book;

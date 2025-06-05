@@ -1,7 +1,7 @@
 "use client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import BookListItem from "@/components/BookListItem";
+import BookListItem from "@/components/library/bookList/BookListItem";
 
 type Props = {
   closeModal: () => void;

@@ -1,9 +1,9 @@
 "use client";
 import { FormEvent, useRef, useState } from "react";
-import Button from "./ui/Button";
-import Modal from "./ui/Modal";
-import Form from "./ui/Form";
-import Input from "./ui/Input";
+import Button from "../../ui/Button";
+import Modal from "../../ui/Modal";
+import Form from "../../ui/Form";
+import Input from "../../ui/Input";
 import { useDispatch } from "react-redux";
 import { RootDispatch, RootState } from "@/redux/store";
 import createNotification from "@/utils/createNotification";

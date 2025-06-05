@@ -1,6 +1,6 @@
 "use client";
 import { useSelector } from "react-redux";
-import Button from "./ui/Button";
+import Button from "../../ui/Button";
 import { RootDispatch, RootState } from "@/redux/store";
 import createNotification from "@/utils/createNotification";
 import { useDispatch } from "react-redux";

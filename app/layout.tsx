@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/header/Header";
 import Notification from "@/components/ui/Notification";
 import ReduxProvider from "@/components/ReduxProvider";
 import AppWrapper from "@/components/AppWrapper";

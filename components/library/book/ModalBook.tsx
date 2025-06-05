@@ -1,7 +1,7 @@
 import Modal from "@/components/ui/Modal";
 import { Book } from "@/types/books";
 import Image from "next/image";
-import Button from "./ui/Button";
+import Button from "../../ui/Button";
 import { useDispatch } from "react-redux";
 import { RootDispatch } from "@/redux/store";
 import createNotification from "@/utils/createNotification";
@@ -25,7 +25,7 @@ const ModalBook = ({ book, onClick }: Props) => {
   async function handleUpdateBookStatus(status: string) {
     try {
       const response = await dispatch(
-        updateBookStatus({ bookID: book.id, newStatus: status }),
+        updateBookStatus({ bookID: book.id, newStatus: status })
       ).unwrap();
 
       const { notification } = response;

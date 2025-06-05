@@ -2,7 +2,7 @@
 import HeaderItem from "@/components/ui/HeaderItem";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Logout from "@/components/Logout";
+import Logout from "@/components/header/Logout";
 
 const Header = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);

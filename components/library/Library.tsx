@@ -1,9 +1,9 @@
 import ProtectedRoute from "@/components/ProtectedRoute";
-import AddBook from "@/components/AddBook";
-import AddCollection from "@/components/AddCollection";
-import CollectionDropdown from "@/components/CollectionDropdown";
-import CollectionBookList from "@/components/CollectionBookList";
-import CollectionSettings from "../CollectionSettings";
+import AddBook from "@/components/library/book/AddBook";
+import AddCollection from "@/components/library/collection/AddCollection";
+import CollectionDropdown from "@/components/library/collection/CollectionDropdown";
+import CollectionBookList from "@/components/library/collectionBookList/CollectionBookList";
+import CollectionSettings from "./collection/CollectionSettings";
 
 const Library = () => {
   return (
